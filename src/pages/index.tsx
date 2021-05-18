@@ -1,9 +1,9 @@
 import {
   Box,
   Button,
-  chakra,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   IconButton,
@@ -15,42 +15,41 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { Field, Form, Formik } from 'formik';
 import React, { useCallback, useState } from 'react';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
-
-type FormItems = {
-  email: string;
-  password: string;
-};
+import * as yup from 'yup';
 
 const Home: React.FC = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formItems, setFormItems] = useState<FormItems>({
-    email: '',
-    password: '',
+
+  const validationSchema = yup.object({
+    email: yup
+      .string()
+      .email('Por favor, digite um email válido')
+      .required('Campo obrigatório'),
+    password: yup.string().required('Campo obrigatório'),
   });
 
   const togglePasswordVisible = useCallback(() => {
     setPasswordVisible(!passwordVisible);
   }, [passwordVisible]);
 
-  const handleSignIn = useCallback(async () => {
-    setIsLoading(true);
+  const handleSignIn = useCallback(async (values, { setSubmitting }) => {
     try {
       // Simulate promise
       return new Promise(() => {
         setTimeout(() => {
-          console.log(formItems);
-          setIsLoading(false);
+          console.log(values);
+          setSubmitting(false);
         }, 2000);
       });
     } catch (err) {
       console.log(err);
-      return setIsLoading(false);
+      return setSubmitting(false);
     }
-  }, [formItems]);
+  }, []);
 
   return (
     <Flex
@@ -77,69 +76,84 @@ const Home: React.FC = () => {
           shadow="base"
           rounded={{ sm: 'lg' }}
         >
-          <chakra.form
-            onSubmit={e => {
-              e.preventDefault();
-              handleSignIn();
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={validationSchema}
+            onSubmit={(values, actions) => {
+              handleSignIn(values, actions);
             }}
           >
-            <Stack spacing="6">
-              <FormControl id="email" isRequired>
-                <FormLabel>Email: </FormLabel>
-                <Input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  value={formItems.email}
-                  onChange={e =>
-                    setFormItems({
-                      ...formItems,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                />
-              </FormControl>
+            {props => (
+              <Form>
+                <Stack spacing="6">
+                  <Field name="email">
+                    {({ field, form }) => (
+                      <FormControl
+                        id="email"
+                        isInvalid={form.errors.email && form.touched.email}
+                      >
+                        <FormLabel>Email: </FormLabel>
+                        <Input
+                          {...field}
+                          id="email"
+                          type="email"
+                          autoComplete="email"
+                        />
+                        <FormErrorMessage>{form.errors.email}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
 
-              <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                  <Input
-                    name="password"
-                    type={passwordVisible ? 'text' : 'password'}
-                    autoComplete="current-password"
-                    value={formItems.password}
-                    onChange={e =>
-                      setFormItems({
-                        ...formItems,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                  />
-                  <InputRightElement>
-                    <IconButton
-                      bg="transparent !important"
-                      variant="ghost"
-                      aria-label={
-                        passwordVisible ? 'Mask password' : 'Reveal password'
-                      }
-                      onClick={togglePasswordVisible}
-                      icon={passwordVisible ? <HiEye /> : <HiEyeOff />}
-                    />
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
+                  <Field name="password">
+                    {({ field, form }) => (
+                      <FormControl
+                        isInvalid={
+                          form.errors.password && form.touched.password
+                        }
+                      >
+                        <FormLabel>Password</FormLabel>
+                        <InputGroup>
+                          <Input
+                            {...field}
+                            id="password"
+                            type={passwordVisible ? 'text' : 'password'}
+                            autoComplete="password"
+                          />
+                          <InputRightElement>
+                            <IconButton
+                              bg="transparent !important"
+                              variant="ghost"
+                              aria-label={
+                                passwordVisible
+                                  ? 'Mask password'
+                                  : 'Reveal password'
+                              }
+                              onClick={togglePasswordVisible}
+                              icon={passwordVisible ? <HiEye /> : <HiEyeOff />}
+                            />
+                          </InputRightElement>
+                        </InputGroup>
+                        <FormErrorMessage>
+                          {form.errors.password}
+                        </FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
 
-              <Button
-                type="submit"
-                colorScheme="blue"
-                size="lg"
-                fontSize="md"
-                isLoading={isLoading}
-              >
-                Sign in
-              </Button>
-            </Stack>
-          </chakra.form>
+                  <Button
+                    type="submit"
+                    colorScheme="blue"
+                    shadow="sm"
+                    size="lg"
+                    fontSize="md"
+                    isLoading={props.isSubmitting}
+                  >
+                    Sign in
+                  </Button>
+                </Stack>
+              </Form>
+            )}
+          </Formik>
         </Box>
       </Box>
     </Flex>
