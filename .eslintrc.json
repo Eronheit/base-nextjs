@@ -38,11 +38,18 @@
     "@typescript-eslint/no-use-before-define": ["error"],
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx", ".js", ".jsx"] }],
     "react/jsx-props-no-spreading": "off",
+    "import/no-extraneous-dependencies": "off",
     "import/extensions": ["error", "ignorePackages", {
       "js": "never",
       "jsx": "never",
       "ts": "never",
       "tsx": "never"
     }]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}, // this loads <rootdir>/tsconfig.json to eslint
+      "node": {}
+    }
   }
 }
