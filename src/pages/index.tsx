@@ -1,4 +1,5 @@
 import { AuthContext } from '@/contexts/AuthContext';
+import { withSSRGuest } from '@/utils/withSSRGuest';
 import {
   Box,
   Button,
@@ -143,5 +144,11 @@ const Home: React.FC = () => {
     </Box>
   );
 };
+
+export const getServerSideProps = withSSRGuest(async () => {
+  return {
+    props: {},
+  };
+});
 
 export default Home;
