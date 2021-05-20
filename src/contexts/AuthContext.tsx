@@ -3,6 +3,8 @@ import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import React, { createContext, ReactNode, useCallback, useState } from 'react';
 import Router from 'next/router';
 import { createStandaloneToast } from '@chakra-ui/toast';
+import AuthLayout from '@/pages/_layouts/Auth';
+import GuestLayout from '@/pages/_layouts/Ghest';
 
 type User = {
   name: string;
@@ -88,7 +90,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider value={{ signIn, user, isAuthenticated }}>
-      {children}
+      {isAuthenticated ? (
+        <AuthLayout>{children}</AuthLayout>
+      ) : (
+        <GuestLayout>{children}</GuestLayout>
+      )}
     </AuthContext.Provider>
   );
 }
