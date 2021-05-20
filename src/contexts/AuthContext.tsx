@@ -1,13 +1,22 @@
 import { api } from '@/services/apiClient';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
-import React, { createContext, ReactNode, useCallback, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import Router from 'next/router';
 import { createStandaloneToast } from '@chakra-ui/toast';
-import AuthLayout from '@/pages/_layouts/Auth';
 import GuestLayout from '@/pages/_layouts/Ghest';
+import AuthLayout from '@/pages/_layouts/Auth';
 
 type User = {
   name: string;
+  permissions: string[];
+  roles: string[];
 };
 
 type SignInCredentials = {
@@ -28,6 +37,7 @@ type AuthContextData = {
     credentials: SignInCredentials,
     actions: SignInActionsSubmit,
   ) => Promise<void>;
+  signOut: () => void;
   user: User;
   isAuthenticated: boolean;
 };
@@ -37,13 +47,12 @@ export const AuthContext = createContext({} as AuthContextData);
 export function signOut() {
   destroyCookie(undefined, 'basenext.token');
 
-  Router.replace('/');
+  Router.push('/');
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
-  const cookies = parseCookies();
-  const isAuthenticated = !!cookies['basenext.token'];
+  const isAuthenticated = !!user;
 
   const toast = createStandaloneToast();
 
@@ -58,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           password,
         });
 
-        const { token, name } = response.data;
+        const { token } = response.data;
 
         toast({
           title: response.data.titulo,
@@ -74,12 +83,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
 
         setUser({
-          name,
+          name: 'John Doe',
+          permissions: [''],
+          roles: [''],
         });
 
         actionsSubmit.setSubmitting(false);
 
-        Router.replace('/dashboard');
+        Router.push('/dashboard');
       } catch (err) {
         console.log(err);
         actionsSubmit.setSubmitting(false);
@@ -88,9 +99,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [],
   );
 
+  useEffect(() => {
+    const { 'basenext.token': token } = parseCookies();
+    if (token) {
+      // implements rules for get user info
+      setUser({ name: 'John Doe', permissions: [''], roles: [''] });
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ signIn, user, isAuthenticated }}>
-      {isAuthenticated ? (
+    <AuthContext.Provider value={{ signIn, signOut, user, isAuthenticated }}>
+      {isAuthenticated && Router.pathname !== '/' ? (
         <AuthLayout>{children}</AuthLayout>
       ) : (
         <GuestLayout>{children}</GuestLayout>
@@ -98,3 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     </AuthContext.Provider>
   );
 }
+
+export const useAuthContext = () => {
+  return useContext(AuthContext);
+};
