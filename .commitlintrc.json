@@ -1,0 +1,3 @@
+{
+  "extends": ["git-commit-msg-linter"]
+}
