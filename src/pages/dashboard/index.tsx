@@ -5,7 +5,7 @@ import React from 'react';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuthContext();
-  return <Heading>Hello {user?.name}</Heading>;
+  return <Heading>Dashboard {user?.name}</Heading>;
 };
 
 export const getServerSideProps = withSSRAuth(async () => {

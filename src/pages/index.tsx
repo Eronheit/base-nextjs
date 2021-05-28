@@ -77,7 +77,6 @@ const Home: React.FC = () => {
                 <Field name="email">
                   {({ field, form }) => (
                     <FormControl
-                      id="email"
                       isInvalid={form.errors.email && form.touched.email}
                     >
                       <FormLabel>Email: </FormLabel>
@@ -93,37 +92,41 @@ const Home: React.FC = () => {
                 </Field>
 
                 <Field name="password">
-                  {({ field, form }) => (
-                    <FormControl
-                      isInvalid={form.errors.password && form.touched.password}
-                    >
-                      <FormLabel>Password</FormLabel>
-                      <InputGroup>
-                        <Input
-                          {...field}
-                          id="password"
-                          type={passwordVisible ? 'text' : 'password'}
-                          autoComplete="password"
-                        />
-                        <InputRightElement>
-                          <IconButton
-                            bg="transparent !important"
-                            variant="ghost"
-                            aria-label={
-                              passwordVisible
-                                ? 'Mask password'
-                                : 'Reveal password'
-                            }
-                            onClick={togglePasswordVisible}
-                            icon={passwordVisible ? <HiEye /> : <HiEyeOff />}
+                  {({ field, form }) => {
+                    return (
+                      <FormControl
+                        isInvalid={
+                          form.errors.password && form.touched.password
+                        }
+                      >
+                        <FormLabel>Password</FormLabel>
+                        <InputGroup>
+                          <Input
+                            {...field}
+                            id="password"
+                            type={passwordVisible ? 'text' : 'password'}
+                            autoComplete="password"
                           />
-                        </InputRightElement>
-                      </InputGroup>
-                      <FormErrorMessage>
-                        {form.errors.password}
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
+                          <InputRightElement>
+                            <IconButton
+                              bg="transparent !important"
+                              variant="ghost"
+                              aria-label={
+                                passwordVisible
+                                  ? 'Mask password'
+                                  : 'Reveal password'
+                              }
+                              onClick={togglePasswordVisible}
+                              icon={passwordVisible ? <HiEye /> : <HiEyeOff />}
+                            />
+                          </InputRightElement>
+                        </InputGroup>
+                        <FormErrorMessage>
+                          {form.errors.password}
+                        </FormErrorMessage>
+                      </FormControl>
+                    );
+                  }}
                 </Field>
 
                 <Button
