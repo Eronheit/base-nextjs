@@ -8,14 +8,12 @@
     "start": "next start",
     "prepare": "husky install",
     "test": "jest --passWithNoTests",
-    "test:watch": "npm test -- --watch",
-    "test:staged": "npm test -- --findRelatedTests",
-    "test:ci": "npm test -- --coverage"
+    "test:watch": "yarn test -- --watch"
   },
   "lint-staged": {
     "src/**": [
       "eslint --fix",
-      "yarn test:staged"
+      "yarn test --findRelatedTests --bail"
     ]
   },
   "dependencies": {
@@ -34,6 +32,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.3",
     "@babel/preset-typescript": "^7.13.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",
@@ -42,6 +41,7 @@
     "@types/react": "^17.0.5",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
+    "babel-loader": "^8.2.2",
     "eslint": "^7.26.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -56,7 +56,6 @@
     "jest": "^27.0.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
-    "ts-jest": "^27.0.1",
     "typescript": "^4.2.4"
   }
 }
