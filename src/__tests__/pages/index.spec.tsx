@@ -1,5 +1,5 @@
 import { render, RenderResult, cleanup } from '@testing-library/react';
-import Login from '.';
+import Login from '@/pages';
 
 const populateField = (
   sut: RenderResult,
