@@ -1,4 +1,3 @@
-import { api } from '@/services/apiClient';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import React, {
   createContext,
@@ -64,6 +63,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       { email, password }: SignInCredentials,
       actionsSubmit: SignInActionsSubmit,
     ) => {
+      console.log(email, password);
+      toast({
+        title: 'Sucesso',
+        description: 'Seja bem vindo!',
+        status: 'success',
+        isClosable: true,
+        position: 'top-right',
+      });
+
       setCookie(undefined, 'basenext.token', 'token', {
         maxAge: 60 * 60 * 24 * 30, // 30 days
         path: '/',
