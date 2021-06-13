@@ -1,13 +1,23 @@
-import React from 'react';
-import { ChakraProvider, localStorageManager } from '@chakra-ui/react';
-import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
+import { ChakraProvider, cookieStorageManager } from '@chakra-ui/react';
+import React, { useMemo, ReactNode } from 'react';
 
-import theme from '@/styles/theme';
+type ThemeContainerProps = {
+  children: ReactNode;
+  chakraColorMode: boolean;
+};
 
-const ThemeContainer: React.FC = ({ children }) => {
+const ThemeContainer: React.FC<ThemeContainerProps> = ({
+  chakraColorMode,
+  children,
+}) => {
+  const cookieChakraColorMode = useMemo(
+    () => cookieStorageManager(`chakra-ui-color-mode=${chakraColorMode}`),
+    [chakraColorMode],
+  );
+
   return (
-    <ChakraProvider theme={theme} colorModeManager={localStorageManager}>
-      <EmotionThemeProvider theme={theme}>{children}</EmotionThemeProvider>
+    <ChakraProvider colorModeManager={cookieChakraColorMode}>
+      {children}
     </ChakraProvider>
   );
 };

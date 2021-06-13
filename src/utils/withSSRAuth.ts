@@ -13,6 +13,8 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     const cookies = parseCookies(ctx);
     const token = cookies['basenext.token'];
 
+    const serverSideResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
+
     if (!token) {
       return {
         redirect: {
@@ -23,7 +25,13 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     }
 
     try {
-      return await fn(ctx);
+      return {
+        ...serverSideResult,
+        props: {
+          ...serverSideResult.props,
+          chakraColorMode: cookies['chakra-ui-color-mode'],
+        },
+      };
     } catch (err) {
       if (err instanceof AuthTokenError) {
         destroyCookie(ctx, 'basenext.token');
