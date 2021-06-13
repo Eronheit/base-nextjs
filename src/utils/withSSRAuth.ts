@@ -30,6 +30,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
         props: {
           ...serverSideResult.props,
           chakraColorMode: cookies['chakra-ui-color-mode'],
+          isAuthenticated: true,
         },
       };
     } catch (err) {

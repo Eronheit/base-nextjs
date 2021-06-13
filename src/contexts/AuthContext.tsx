@@ -30,6 +30,7 @@ type SignInActionsSubmit = {
 
 type AuthProviderProps = {
   children: ReactNode;
+  isAuthenticated: boolean;
 };
 
 type AuthContextData = {
@@ -44,15 +45,17 @@ type AuthContextData = {
 
 export const AuthContext = createContext({} as AuthContextData);
 
-export function signOut() {
+export function signOut(): void {
   destroyCookie(undefined, 'basenext.token');
 
   Router.push('/');
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User>();
-  const isAuthenticated = !!user;
+export const AuthProvider: React.FC<AuthProviderProps> = ({
+  children,
+  isAuthenticated,
+}) => {
+  const [user, setUser] = useState<User>(null);
 
   const toast = createStandaloneToast();
 
@@ -61,62 +64,45 @@ export function AuthProvider({ children }: AuthProviderProps) {
       { email, password }: SignInCredentials,
       actionsSubmit: SignInActionsSubmit,
     ) => {
-      try {
-        const response = await api.post('login', {
-          email,
-          password,
-        });
+      setCookie(undefined, 'basenext.token', 'token', {
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/',
+      });
 
-        const { token } = response.data;
+      setUser({
+        name: 'John Doe',
+        permissions: [''],
+        roles: [''],
+      });
 
-        toast({
-          title: response.data.titulo,
-          description: response.data.mensagem,
-          status: 'success',
-          isClosable: true,
-          position: 'top-right',
-        });
+      actionsSubmit.setSubmitting(false);
 
-        setCookie(undefined, 'basenext.token', token, {
-          maxAge: 60 * 60 * 24 * 30, // 30 days
-          path: '/',
-        });
-
-        setUser({
-          name: 'John Doe',
-          permissions: [''],
-          roles: [''],
-        });
-
-        actionsSubmit.setSubmitting(false);
-
-        Router.push('/dashboard');
-      } catch (err) {
-        console.log(err);
-        actionsSubmit.setSubmitting(false);
-      }
+      Router.push('/dashboard');
     },
     [],
   );
 
   useEffect(() => {
     const { 'basenext.token': token } = parseCookies();
+
     if (token) {
       // implements rules for get user info
       setUser({ name: 'John Doe', permissions: [''], roles: [''] });
     }
   }, []);
 
+  // console.log('user', user);
+
   return (
     <AuthContext.Provider value={{ signIn, signOut, user, isAuthenticated }}>
-      {isAuthenticated && Router.pathname !== '/' ? (
+      {isAuthenticated ? (
         <AuthLayout>{children}</AuthLayout>
       ) : (
         <GuestLayout>{children}</GuestLayout>
       )}
     </AuthContext.Provider>
   );
-}
+};
 
 export const useAuthContext = () => {
   return useContext(AuthContext);

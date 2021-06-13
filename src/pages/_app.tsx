@@ -6,6 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <ThemeContainer chakraColorMode={pageProps.chakraColorMode}>
+      <AuthProvider isAuthenticated={pageProps.isAuthenticated}>
         <Component {...pageProps} />
       </AuthProvider>
     </ThemeContainer>
