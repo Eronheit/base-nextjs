@@ -9,7 +9,8 @@
     "prepare": "husky install",
     "test": "jest --passWithNoTests",
     "test:watch": "yarn test -- --watch",
-    "generate": "yarn plop --plopfile generators/plopfile.js"
+    "generate:component": "yarn plop --plopfile generators/plopfileComponent.js",
+    "generate:page": "yarn plop --plopfile generators/plopfilePage.js"
   },
   "lint-staged": {
     "src/**": [

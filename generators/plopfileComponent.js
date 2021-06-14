@@ -1,6 +1,7 @@
 module.exports = plop => {
   plop.setGenerator('component', {
     description: 'Create a component',
+
     prompts: [
       {
         type: 'input',
@@ -12,17 +13,17 @@ module.exports = plop => {
       {
         type: 'add',
         path: '../src/components/{{pascalCase name}}/index.tsx',
-        templateFile: 'templates/Component.tsx.hbs',
+        templateFile: 'templates/components/index.tsx.hbs',
       },
       {
         type: 'add',
         path: '../src/components/{{pascalCase name}}/styles.module.scss',
-        templateFile: 'templates/styles.module.scss.hbs',
+        templateFile: 'templates/components/styles.module.scss.hbs',
       },
       {
         type: 'add',
-        path: '../src/components/{{pascalCase name}}/test.tsx',
-        templateFile: 'templates/test.tsx.hbs',
+        path: '../src/__tests__/components/{{pascalCase name}}.spec.tsx',
+        templateFile: 'templates/components/index.spec.tsx.hbs',
       },
     ],
   });
