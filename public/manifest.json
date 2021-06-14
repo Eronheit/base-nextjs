@@ -1,0 +1,22 @@
+{
+  "name": "Base NextJS",
+  "short_name": "Base NextJS",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "background_color": "#fff",
+  "description": "A base of projects using NextJS",
+  "display": "fullscreen",
+  "start_url": "/",
+  "theme_color": "#fff"
+}
