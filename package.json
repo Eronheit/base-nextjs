@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "prepare": "husky install",
     "test": "jest --passWithNoTests",
     "test:watch": "yarn test -- --watch",
     "generate": "yarn plop --plopfile generators/plopfile.js"
