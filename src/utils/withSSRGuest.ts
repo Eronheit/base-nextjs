@@ -5,6 +5,7 @@ import {
 } from 'next';
 import { AppProps } from 'next/dist/next-server/lib/router/router';
 import { parseCookies } from 'nookies';
+import ssrGlobalProps from './ssrGlobalProps';
 
 export function withSSRGuest<P>(fn: GetServerSideProps<P>) {
   return async (
@@ -12,7 +13,7 @@ export function withSSRGuest<P>(fn: GetServerSideProps<P>) {
   ): Promise<GetServerSidePropsResult<AppProps>> => {
     const cookies = parseCookies(ctx);
 
-    const serverSideResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
+    const SSRPagePropsResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
 
     if (cookies['basenext.token']) {
       return {
@@ -23,12 +24,6 @@ export function withSSRGuest<P>(fn: GetServerSideProps<P>) {
       };
     }
 
-    return {
-      ...serverSideResult,
-      props: {
-        ...serverSideResult.props,
-        chakraColorMode: cookies['chakra-ui-color-mode'] ?? '',
-      },
-    };
+    return ssrGlobalProps(ctx, SSRPagePropsResult);
   };
 }

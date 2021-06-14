@@ -5,6 +5,7 @@ import {
 } from 'next';
 import { destroyCookie, parseCookies } from 'nookies';
 import { AuthTokenError } from '../services/errors/AuthTokenError';
+import ssrGlobalProps from './ssrGlobalProps';
 
 export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
   return async (
@@ -13,7 +14,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     const cookies = parseCookies(ctx);
     const token = cookies['basenext.token'];
 
-    const serverSideResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
+    const SSRPagePropsResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
 
     if (!token) {
       return {
@@ -25,14 +26,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     }
 
     try {
-      return {
-        ...serverSideResult,
-        props: {
-          ...serverSideResult.props,
-          chakraColorMode: cookies['chakra-ui-color-mode'],
-          isAuthenticated: true,
-        },
-      };
+      return ssrGlobalProps(ctx, SSRPagePropsResult, { isAuthenticated: true });
     } catch (err) {
       if (err instanceof AuthTokenError) {
         destroyCookie(ctx, 'basenext.token');
