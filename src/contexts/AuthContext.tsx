@@ -2,7 +2,6 @@ import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import React, {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -58,37 +57,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   const toast = createStandaloneToast();
 
-  const signIn = useCallback(
-    async (
-      { email, password }: SignInCredentials,
-      actionsSubmit: SignInActionsSubmit,
-    ) => {
+  const signIn = async (
+    { email, password }: SignInCredentials,
+    actionsSubmit: SignInActionsSubmit,
+  ) => {
+    // eslint-disable-next-line
       console.log(email, password);
-      toast({
-        title: 'Sucesso',
-        description: 'Seja bem vindo!',
-        status: 'success',
-        isClosable: true,
-        position: 'top-right',
-      });
+    toast({
+      title: 'Sucesso',
+      description: 'Seja bem vindo!',
+      status: 'success',
+      isClosable: true,
+      position: 'top-right',
+    });
 
-      setCookie(undefined, 'basenext.token', 'token', {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: '/',
-      });
+    setCookie(undefined, 'basenext.token', 'token', {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: '/',
+    });
 
-      setUser({
-        name: 'John Doe',
-        permissions: [''],
-        roles: [''],
-      });
+    setUser({
+      name: 'John Doe',
+      permissions: [''],
+      roles: [''],
+    });
 
-      actionsSubmit.setSubmitting(false);
+    actionsSubmit.setSubmitting(false);
 
-      Router.push('/dashboard');
-    },
-    [],
-  );
+    Router.push('/dashboard');
+  };
 
   useEffect(() => {
     const { 'basenext.token': token } = parseCookies();
