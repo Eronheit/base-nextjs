@@ -14,7 +14,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     const cookies = parseCookies(ctx);
     const token = cookies['basenext.token'];
 
-    const SSRPagePropsResult = (await fn?.(ctx)) ?? ({ props: {} } as any);
+    const SSRPagePropsResult = (await fn?.(ctx)) ?? ({ props: {} } as any); //eslint-disable-line
 
     if (!token) {
       return {
