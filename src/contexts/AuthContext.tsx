@@ -112,6 +112,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   );
 };
 
-export const useAuthContext = () => {
+export const useAuthContext = (): AuthContextData => {
   return useContext(AuthContext);
 };
