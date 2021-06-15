@@ -25,6 +25,7 @@
     "axios": "^0.21.1",
     "formik": "^2.2.6",
     "framer-motion": "^4",
+    "identity-obj-proxy": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "next": "10.2.0",
     "next-pwa": "^5.2.21",
