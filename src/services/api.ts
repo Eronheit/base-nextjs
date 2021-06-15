@@ -1,10 +1,10 @@
 import { createStandaloneToast } from '@chakra-ui/toast';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { parseCookies } from 'nookies';
 import { signOut } from '../contexts/AuthContext';
 import { AuthTokenError } from './errors/AuthTokenError';
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient(ctx = undefined): AxiosInstance {
   const cookies = parseCookies(ctx);
   const toast = createStandaloneToast();
 
