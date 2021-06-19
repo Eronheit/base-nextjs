@@ -8,8 +8,6 @@ import React, {
 } from 'react';
 import Router from 'next/router';
 import { createStandaloneToast } from '@chakra-ui/toast';
-import GuestLayout from '@/pages/_layouts/Ghest';
-import AuthLayout from '@/pages/_layouts/Auth';
 
 type User = {
   name: string;
@@ -100,11 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 
   return (
     <AuthContext.Provider value={{ signIn, signOut, user, isAuthenticated }}>
-      {isAuthenticated ? (
-        <AuthLayout>{children}</AuthLayout>
-      ) : (
-        <GuestLayout>{children}</GuestLayout>
-      )}
+      {children}
     </AuthContext.Provider>
   );
 };
