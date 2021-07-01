@@ -5,7 +5,7 @@ import AuthLayout from '@/pages/_layouts/Auth';
 
 type ThemeContainerProps = {
   children: ReactNode;
-  chakraColorMode: boolean;
+  chakraColorMode: string;
   isAuthenticated: boolean;
 };
 
